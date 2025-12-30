@@ -2,15 +2,51 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kids Learning – Drag to Basket</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>KG टीचर</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4caf50">
+<meta name="theme-color" content="#5bbcff">
 
 <style>
 *{box-sizing:border-box;font-family:"Noto Sans Devanagari",Arial}
-body{margin:0;background:#fff;overflow:hidden}
+html,body{
+ margin:0;
+ width:100%;
+ height:100%;
+ background:#fff;
+ overflow:hidden;
+ touch-action:none;
+}
+
+/* INFO */
+#planInfo{
+ position:fixed;top:6px;left:6px;
+ background:#000;color:#fff;
+ padding:4px 8px;font-size:12px;
+ border-radius:6px;z-index:999
+}
+
+/* LICENSE */
+#licenseScreen{
+ position:fixed;inset:0;
+ background:#fff;
+ display:flex;flex-direction:column;
+ justify-content:center;align-items:center;
+ z-index:1000;text-align:center;padding:20px
+}
+#licenseScreen input{padding:10px;font-size:16px;margin-top:10px;width:220px}
+#licenseScreen button{margin-top:10px;padding:10px 18px;font-size:16px}
+#challengeBox{white-space:pre-line;font-weight:bold;margin-top:10px}
+
+/* GAME */
+#game{
+ display:none;
+ width:100vw;
+ height:100vh;
+ flex-direction:column;
+}
 
 /* MODES */
 #modes{
@@ -24,58 +60,74 @@ body{margin:0;background:#fff;overflow:hidden}
 
 /* TOP */
 #top{
- height:60vh;
+ flex:1;
  display:flex;
  flex-direction:column;
  align-items:center;
+ justify-content:flex-start;
 }
-
 #instruction{
- font-size:22px;font-weight:900;margin:6px;text-align:center
+ display:none;
 }
 
-#objectBox{
- height:220px;
- display:flex;align-items:center;justify-content:center
-}
 .object{
- font-size:140px;
+ font-size:180px;
+ margin-top: 38px;
  animation:float 2s ease-in-out infinite alternate;
- cursor:pointer
 }
 @keyframes float{
  from{transform:translateY(0)}
- to{transform:translateY(-12px)}
+ to{transform:translateY(-14px)}
 }
-#objectName{font-size:26px;font-weight:900}
+
+#objectName{
+ font-size:26px;
+ font-weight:900;
+ margin-top:6px
+}
+
+/* NUMBER DISPLAY */
+.numBig{
+ min-width:220px;
+ padding:0px;
+ border-radius:20px;
+ background:#5bbcff;
+ color:#fff;
+ font-size:170px;
+ font-weight:900;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ margin-top:60px;
+ animation:numFloat 1.8s ease-in-out infinite alternate;
+}
+@keyframes numFloat{
+ from{transform:translateY(0) scale(1)}
+ to{transform:translateY(-16px) scale(1.08)}
+}
 
 /* BASKET */
 #basket{
- font-size:110px;
- margin-top:6px;
- position:relative
-}
-#basket.active{transform:scale(1.1)}
-
-/* STARS */
-.star{
- position:absolute;
- font-size:26px;
- animation:star 1s forwards
-}
-@keyframes star{
- to{opacity:0;transform:translateY(-80px) scale(0)}
+ position: fixed;
+ bottom: 60px;          /* स्क्रीन के नीचे से दूरी */
+ left: 50%;
+ transform: translateX(-50%);
+ font-size: 280px;      /* टोकरी का साइज़ */
+ z-index: 5;
+ pointer-events: none;
 }
 
 /* OPTIONS */
 #letters{
- height:40vh;
  display:flex;
  justify-content:space-evenly;
- align-items:center
+ align-items:center;
+ padding-bottom:8px;
+ margin-bottom:30px;   /* ✔ अब cards ऊपर आएँगे */
 }
 .card{
- width:90px;height:90px;
+ width:90px;
+ height:90px;
  border-radius:20px;
  background:#ffd54f;
  display:flex;
@@ -84,36 +136,154 @@ body{margin:0;background:#fff;overflow:hidden}
  font-size:48px;
  font-weight:900;
  box-shadow:0 6px 12px rgba(0,0,0,.3);
- touch-action:none;
  position:relative;
+ z-index:20;  
 }
-.numCard{
- background:hsl(var(--h),80%,70%);
+.numCard{background:hsl(var(--h),80%,70%)}
+/* PLAN CARD */
+.planCard{
+ margin:16px 0;
+ padding:14px 18px;
+ border-radius:18px;
+ background:linear-gradient(135deg,#673ab7,#3f51b5);
+ color:#fff;
+ width:100%;
+ max-width:320px;
+ box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
+
+.planTitle{
+ font-size:18px;
+ font-weight:700;
+}
+
+.planPrice{
+ font-size:28px;
+ font-weight:900;
+ margin:6px 0;
+}
+
+.planPrice span{
+ font-size:14px;
+ font-weight:400;
+ opacity:.9;
+}
+
+.planNote{
+ font-size:13px;
+ line-height:1.4;
+ opacity:.95;
+}
+/* CONTACT BUTTONS */
+.contactBox{
+ margin-top:14px;
+ padding:14px;
+ border-radius:18px;
+ background:#e8f5e9;
+ width:100%;
+ max-width:320px;
+ box-shadow:0 8px 18px rgba(0,0,0,.2);
+ text-align:center;
+}
+
+.contactTitle{
+ font-size:15px;
+ font-weight:700;
+ margin-bottom:10px;
+ color:#1b5e20;
+}
+
+.contactBtns{
+ display:flex;
+ gap:10px;
+ justify-content:center;
+}
+
+.contactBtns a{
+ flex:1;
+ padding:10px 0;
+ border-radius:14px;
+ font-size:14px;
+ font-weight:900;
+ text-decoration:none;
+ color:#fff;
+}
+
+.callBtn{background:#2196f3;}
+.waBtn{background:#25d366;}
 </style>
 </head>
 
 <body>
 
-<div id="modes">
- <button onclick="setMode('hindi')">क–ज्ञ</button>
- <button onclick="setMode('swar')">अ–ः</button>
- <button onclick="setMode('matra')">मात्राएँ</button>
- <button onclick="setMode('eng')">A–Z</button>
- <button onclick="setMode('num')">1–100</button>
-</div>
+<div id="planInfo"></div>
 
-<div id="top">
- <div id="instruction"></div>
- <div id="objectBox"></div>
- <div id="objectName"></div>
- <div id="basket">🧺</div>
-</div>
+<!-- LICENSE SCREEN -->
+<div id="licenseScreen">
+  <h3>Trial समाप्त हो गया</h3>
 
-<div id="letters"></div>
+  <div id="challengeBox"></div>
+
+  <!-- PLAN CARD -->
+  <div class="planCard">
+    <div class="planTitle">Premium Plan</div>
+    <div class="planPrice">₹100 <span>/ 1 Year</span></div>
+    <div class="planNote">
+      ✔ सभी गेम अनलॉक<br>
+      ✔ विज्ञापन नहीं<br>
+      ✔ बच्चों के लिए सुरक्षित
+    </div>
+  </div>
+<!-- CONTACT BUTTONS -->
+<div class="contactBox">
+
+  <div class="contactTitle">
+    Activation Code के लिए संपर्क करें
+  </div>
+
+  <div class="contactBtns">
+
+    <!-- CALL BUTTON -->
+    <a class="callBtn" href="tel:6393998216">
+      📞 Call करें
+    </a>
+
+    <!-- WHATSAPP BUTTON -->
+    <a class="waBtn"
+       href="https://wa.me/916393998216?text=Hello%20KG%20Teacher,%20mujhe%20activation%20code%20chahiye"
+       target="_blank">
+       💬 WhatsApp करें
+    </a>
+
+  </div>
+</div>
+  <input id="licenseInput" placeholder="Activation Code">
+  <button onclick="activate()">Activate</button>
+  <div id="msg"></div>
+</div>
+ 
+<!-- GAME -->
+<div id="game">
+ <div id="modes">
+  <button onclick="setMode('hindi')">क–ज्ञ</button>
+  <button onclick="setMode('swar')">अ–ः</button>
+  <button onclick="setMode('matra')">मात्राएँ</button>
+  <button onclick="setMode('eng')">A–Z</button>
+  <button onclick="setMode('num')">1–100</button>
+ </div>
+
+ <div id="top">
+  <div id="instruction"></div>
+  <div id="objectBox"></div>
+  <div id="objectName"></div>
+  <div id="basket">🏘️</div>
+ </div>
+
+ <div id="letters"></div>
+</div>
 
 <script>
-/* SPEECH */
+/* SPEAK */
 function speak(t){
  speechSynthesis.cancel();
  const u=new SpeechSynthesisUtterance(t);
@@ -121,24 +291,9 @@ function speak(t){
  speechSynthesis.speak(u);
 }
 
-/* English sound */
-const engSound={
-A:"ए",B:"बी",C:"सी",D:"डी",E:"ई",F:"एफ",G:"जी",
-H:"एच",I:"आई",J:"जे",K:"के",L:"एल",M:"एम",N:"एन",O:"ओ",
-P:"पी",Q:"क्यू",R:"आर",S:"एस",T:"टी",U:"यू",V:"वी",
-W:"डब्ल्यू",X:"एक्स",Y:"वाई",Z:"ज़ेड"
-};
+const matraVoice={"ा":"आ","ि":"इ","ी":"ई","ु":"उ","ू":"ऊ","े":"ए","ै":"ऐ","ो":"ओ","ौ":"औ","ं":"अं","ः":"अः"};
 
-/* मात्रा → स्वर आवाज़ */
-const matraVoice={
-"ा":"आ","ि":"इ","ी":"ई","ु":"उ","ू":"ऊ",
-"े":"ए","ै":"ऐ","ो":"ओ","ौ":"औ",
-"ं":"अं","ः":"अः"
-};
-
-/* हिंदी नंबर शब्द */
-const hindiNums=[
-"", "एक","दो","तीन","चार","पाँच","छह","सात","आठ","नौ","दस",
+const hindiNums=["","एक","दो","तीन","चार","पाँच","छह","सात","आठ","नौ","दस",
 "ग्यारह","बारह","तेरह","चौदह","पंद्रह","सोलह","सत्रह","अठारह","उन्नीस","बीस",
 "इक्कीस","बाईस","तेईस","चौबीस","पच्चीस","छब्बीस","सत्ताईस","अट्ठाईस","उनतीस","तीस",
 "इकतीस","बत्तीस","तैंतीस","चौंतीस","पैंतीस","छत्तीस","सैंतीस","अड़तीस","उनतालीस","चालीस",
@@ -147,44 +302,16 @@ const hindiNums=[
 "इकसठ","बासठ","तिरसठ","चौंसठ","पैंसठ","छियासठ","सड़सठ","अड़सठ","उनहत्तर","सत्तर",
 "इकहत्तर","बहत्तर","तिहत्तर","चौहत्तर","पचहत्तर","छिहत्तर","सतहत्तर","अठहत्तर","उनासी","अस्सी",
 "इक्यासी","बयासी","तिरासी","चौरासी","पचासी","छियासी","सत्तासी","अठासी","नवासी","नब्बे",
-"इक्यानवे","बानवे","तिरानवे","चौरानवे","पचानवे","छियानवे","सत्तानवे","अट्ठानवे","निन्यानवे","सौ"
-];
+"इक्यानवे","बानवे","तिरानवे","चौरानवे","पचानवे","छियानवे","सत्तानवे","अट्ठानवे","निन्यानवे","सौ"];
 
-/* DATA */
 const data={
- hindi:[
- ["क","कबूतर","🕊️"],["ख","खरगोश","🐇"],["ग","गाय","🐄"],["घ","घर","🏠"],
- ["च","चिड़िया","🐦"],["ज","जहाज़","🚢"],["ट","टमाटर","🍅"],["त","तितली","🦋"],
- ["द","दरवाज़ा","🚪"],["न","नारियल","🥥"],["प","पतंग","🪁"],["फ","फल","🍎"],
- ["ब","बंदर","🐒"],["म","मछली","🐟"],["र","रथ","🛺"],["ल","लड्डू","🍡"],
- ["व","विमान","✈️"],["स","सूरज","☀️"],["ह","हाथी","🐘"],["ज्ञ","ज्ञान","📘"]
- ],
- swar:[
- ["अ","अनार","🍎"],["आ","आम","🥭"],["इ","इमली","🌿"],["ई","ईख","🎋"],
- ["उ","उल्लू","🦉"],["ऊ","ऊन","🧶"],["ऋ","ऋषि","🧘"],["ए","एड़ी","🦶"],
- ["ऐ","ऐनक","👓"],["ओ","ओखली","🪨"],["औ","औरत","👩"],["अं","अंगूर","🍇"],
- ["अः","दुःख","📘"]
- ],
- matra:[
- ["ा","का","📘"],["ि","कि","📘"],["ी","की","📘"],["ु","कु","📘"],
- ["ू","कू","📘"],["े","के","📘"],["ै","कै","📘"],["ो","को","📘"],
- ["ौ","कौ","📘"],["ं","कं","📘"],["ः","कः","📘"]
- ],
- eng:[
- ["A","Apple","🍎"],["B","Ball","⚽"],["C","Cat","🐱"],["D","Dog","🐶"],
- ["E","Elephant","🐘"],["F","Fish","🐟"],["G","Grapes","🍇"],["H","Hen","🐔"],
- ["I","Ice Cream","🍦"],["J","Jug","🫙"],["K","Kite","🪁"],["L","Lion","🦁"],
- ["M","Mango","🥭"],["N","Nest","🪺"],["O","Orange","🍊"],["P","Parrot","🦜"],
- ["Q","Queen","👑"],["R","Rabbit","🐇"],["S","Sun","☀️"],["T","Tiger","🐯"],
- ["U","Umbrella","☂️"],["V","Van","🚐"],["W","Watch","⌚"],["X","Xylophone","🎼"],
- ["Y","Yacht","🛥️"],["Z","Zebra","🦓"]
- ],
- num:Array.from({length:100},(_,i)=>[
- String(i+1), hindiNums[i+1], hindiNums[i+1]
- ])
+ hindi:[["क","कबूतर","🕊️"],["ख","खरगोश","🐇"],["ग","गाय","🐄"],["घ","घोड़ा","🐎"],["च","चिड़िया","🐦"],["छ","छतरी","☂️"],["ज","जहाज़","🚢"],["झ","झण्डा","⛳"],["ट","टमाटर","🍅"],["ठ","ठहाका","😂"],["ड","ड्रम","🥁"],["ढ","ढोल","🪘"],["त","तितली","🦋"],["थ","थाली","🍽️"],["द","दवा","💊"],["ध","धनुष","🏹"],["न","नारियल","🥥"],["प","पतंग","🪁"],["फ","फल","🍎"],["ब","बकरी","🐐"],["भ","भेंड़","🐑"],["म","मछली","🐟"],["य","याक","🦬"],["र","राजा","🤴"],["ल","लड्डू","🍡"],["व","विमान","✈️"],["स","सूरज","☀️"],["ष","षट्कोण","🛑"],["श","शंख","🐚"],["ह","हाथी","🐘"],["क्ष","क्षमा","🙏"],["त्र","त्रिशूल","🔱"],["ज्ञ","ज्ञान","📘"]],
+ swar:[["अ","अनार","🍎"],["आ","आम","🥭"],["इ","इनाम","🎁"],["ई","ईट","🧱"],["उ","उल्लू","🦉"],["ऊ","ऊन","🧶"],["ऋ","ऋषि","🧘"],["ए","एड़ी","🦶"],["ऐ","ऐनक","👓"],["ओ","ओम्","🕉️"],["औ","औरत","👩"],["अं","अंगूर","🍇"],["अः","दुःख","😢"]],
+ matra:[["ा","कार","🚗"],["ि","किसान","👨‍🌾"],["ी","चींटी","🐜"],["ु","कुत्ता","🐕"],["ू","कूकर","🍲"],["ृ","कृषि","🏞️"],["े","केक","🍰"],["ै","कैंची","✂️"],["ो","ओम्","🕉️"],["ौ","औरत","👩"],["ं","अंगूठी","💍"],["ः","दुःख","😢"]],
+ eng:[["A","Apple","🍎"],["B","Ball","⚽"],["C","Cat","🐱"],["D","Dog","🐶"],["E","Elephant","🐘"],["F","Fish","🐟"],["G","Grapes","🍇"],["H","Hen","🐔"],["I","Ice Cream","🍦"],["J","Jug","🏺"],["K","Kite","🪁"],["L","Lion","🦁"],["M","Mango","🥭"],["N","Nose","👃"],["O","Orange","🍊"],["P","Parrot","🦜"],["Q","Queen","👑"],["R","Rabbit","🐇"],["S","Sun","☀️"],["T","Tiger","🐯"],["U","Umbrella","☂️"],["V","Van","🚐"],["W","Watch","⌚"],["X","Xylophone","🎼"],["Y","Yacht","🛥️"],["Z","Zebra","🦓"]],
+ num:Array.from({length:100},(_,i)=>[String(i+1),hindiNums[i+1],hindiNums[i+1]])
 };
 
-/* GAME */
 let mode="hindi",index=0;
 const instruction=document.getElementById("instruction");
 const objectBox=document.getElementById("objectBox");
@@ -198,20 +325,22 @@ function list(){return data[mode];}
 function load(){
  letters.innerHTML="";
  objectBox.innerHTML="";
- basket.querySelectorAll(".star").forEach(s=>s.remove());
-
  const [ans,name,obj]=list()[index];
- const voice = (mode==="matra") ? matraVoice[ans] : ans;
+ const voice=(mode==="matra")?matraVoice[ans]:ans;
+ instruction.innerText=`बाबू! ${voice} को घर में रखो`;
+ speak(instruction.innerText);
 
- const line=`बाबू! ${voice} को टोकरी में डालो`;
- instruction.innerText=line;
- speak(line);
-
- const o=document.createElement("div");
- o.className="object";
- o.innerText=obj ?? ans;
- o.onclick=()=>speak(voice);
- objectBox.appendChild(o);
+ if(mode==="num"){
+  const n=document.createElement("div");
+  n.className="numBig";
+  n.innerText=ans;
+  objectBox.appendChild(n);
+ }else{
+  const o=document.createElement("div");
+  o.className="object";
+  o.innerText=obj||ans;
+  objectBox.appendChild(o);
+ }
  objectName.innerText=name;
 
  let opts=[ans];
@@ -226,67 +355,157 @@ function load(){
   c.className="card"+(mode==="num"?" numCard":"");
   if(mode==="num")c.style.setProperty("--h",Math.random()*360);
   c.innerText=v;
-  c.onclick=()=>speak(
-    mode==="matra"?matraVoice[v]:
-    mode==="eng"?engSound[v]||v:v
-  );
   drag(c,v,ans);
   letters.appendChild(c);
  });
 }
 
-/* DRAG */
 function drag(el,val,correct){
  let sx,sy,ox,oy;
- el.addEventListener("pointerdown",e=>{
+ el.onpointerdown=e=>{
   el.setPointerCapture(e.pointerId);
   sx=e.clientX;sy=e.clientY;
   const r=el.getBoundingClientRect();
   ox=r.left;oy=r.top;
- });
- el.addEventListener("pointermove",e=>{
+ };
+ el.onpointermove=e=>{
   if(!el.hasPointerCapture(e.pointerId))return;
   el.style.position="fixed";
   el.style.left=ox+(e.clientX-sx)+"px";
   el.style.top=oy+(e.clientY-sy)+"px";
- });
- el.addEventListener("pointerup",e=>{
+ };
+ el.onpointerup=e=>{
   el.releasePointerCapture(e.pointerId);
-  const b=basket.getBoundingClientRect();
-  const r=el.getBoundingClientRect();
-  if(r.right>b.left&&r.left<b.right&&r.bottom>b.top){
-   if(val===correct){success(el,val);}
-   else{reset(el);speak("अरे नहीं, फिर से कोशिश करो");}
-  }else reset(el);
- });
+  const b = basket.getBoundingClientRect();
+const r = el.getBoundingClientRect();
+
+/* कार्ड का center point */
+const cx = r.left + r.width/2;
+const cy = r.top + r.height/2;
+
+/* घर के अंदर है या नहीं */
+if(
+  cx > b.left &&
+  cx < b.right &&
+  cy > b.top &&
+  cy < b.bottom
+){
+   if(val===correct){speak(val);index++;load();}
+   else speak("फिर से कोशिश करो");
+  }
+  el.style.position="relative";el.style.left=0;el.style.top=0;
+ };
 }
 
-function reset(el){
- el.style.position="relative";
- el.style.left="0";el.style.top="0";
+/* LICENSE */
+const TRIAL_MS=5*60*1000, PLAN_DAYS=365;
+function unlock(){licenseScreen.style.display="none";game.style.display="flex";load();}
+function lock(){
+ game.style.display="none";licenseScreen.style.display="flex";
+ const c="C-"+Date.now();localStorage.setItem("CHALLENGE",c);
+ challengeBox.innerText="Activation ID:\n"+c;
+}
+const _x = ["x9@K!2#L$7"];
+
+function makeCode(ch){
+ let t = ch
+   .split("")
+   .reverse()
+   .join("") + _x[0];
+
+ let n = 0;
+
+ for(let i=0;i<t.length;i++){
+  n = (n << 5) - n + t.charCodeAt(i);
+  n |= 0; // bitwise force
+ }
+
+ const d = new Date();
+ n = Math.abs(
+   n +
+   d.getDate() * 97 +
+   (d.getMonth() + 1) * 13
+ );
+
+ return (
+   String.fromCharCode(65 + (n % 26)) +
+   (n % 9) +
+   String.fromCharCode(90 - (n % 26)) +
+   (1000 + (n % 9000))
+ );
+}
+function activate(){
+ if(licenseInput.value===makeCode(localStorage.getItem("CHALLENGE"))){
+  localStorage.setItem("PLAN_EXPIRY",Date.now()+PLAN_DAYS*86400000);
+  unlock();
+ }else msg.innerText="❌ गलत कोड";
 }
 
-function success(el,val){
- basket.classList.add("active");
- speak(mode==="matra"?matraVoice[val]:val);
- setTimeout(()=>{
-  basket.classList.remove("active");
-  index=(index+1)%list().length;
-  load();
- },1000);
+const now=Date.now();
+const planExp=+localStorage.getItem("PLAN_EXPIRY");
+let trialStart=+localStorage.getItem("TRIAL_START");
+
+if(planExp && now<planExp){
+ unlock();
+}else{
+ if(!trialStart){trialStart=now;localStorage.setItem("TRIAL_START",trialStart);}
+ const remain=TRIAL_MS-(now-trialStart);
+ if(remain>0){unlock();setTimeout(lock,remain);}
+ else lock();
 }
 
-load();
+setInterval(()=>{
+ if(planExp && Date.now()<planExp)
+  planInfo.innerText=Math.ceil((planExp-Date.now())/86400000)+"D";
+ else planInfo.innerText="Trial";
+},1000);
 </script>
-
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", function () {
-    navigator.serviceWorker.register("service-worker.js");
+  let newWorker;
+
+  navigator.serviceWorker.register("service-worker.js");
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    window.location.reload();
   });
+
+  navigator.serviceWorker.getRegistration().then(reg => {
+    if (!reg) return;
+
+    if (reg.waiting) showUpdate(reg.waiting);
+
+    reg.addEventListener("updatefound", () => {
+      newWorker = reg.installing;
+      newWorker.addEventListener("statechange", () => {
+        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+          showUpdate(newWorker);
+        }
+      });
+    });
+  });
+
+  function showUpdate(worker) {
+    const bar = document.createElement("div");
+    bar.style.cssText = `
+      position:fixed;bottom:10px;left:10px;right:10px;
+      background:#4caf50;color:#fff;padding:12px;
+      border-radius:10px;font-size:16px;
+      display:flex;justify-content:space-between;
+      align-items:center;z-index:9999;
+    `;
+    bar.innerHTML = `
+      🔄 नया अपडेट आया है
+      <button style="padding:6px 12px;border:none;border-radius:6px">
+        Refresh
+      </button>
+    `;
+    bar.querySelector("button").onclick = () => {
+      worker.postMessage("SKIP_WAITING");
+    };
+    document.body.appendChild(bar);
+  }
 }
 </script>
-
 </body>
 </html>
-
