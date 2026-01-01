@@ -1,4 +1,4 @@
-const CACHE_NAME = "kg-teacher-v3";
+const CACHE_NAME = "kg-teacher-v4";
 
 const FILES_TO_CACHE = [
   "./index.html",
