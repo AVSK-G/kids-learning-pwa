@@ -1,11 +1,11 @@
 {
   "name": "KG टीचर",
-  "short_name": "KG Teacher",
+  "short_name": "KG टीचर",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#5bbcff",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "icon-192.png",
